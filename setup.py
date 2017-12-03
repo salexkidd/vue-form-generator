@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import vue_form_generators
+import vue_form_generator
 
 try:
     with open("README.md") as f:
@@ -9,14 +9,14 @@ except Exception as e:
     long_description = ""
 
 setup(
-    name='restframework-vue-form-generators',
+    name='restframework-vue-form-generator',
     author = "salexkidd",
     author_email = "salexkidd@gmail.com",
     url = "",
-    description='restframework-vue-form-generators',
+    description='restframework-vue-form-generator',
     long_description=long_description,
     keywords = ["django", "restframework", "serializer", "vuejs"],
-    version=vue_form_generators.__VERSION__,
+    version=vue_form_generator.__VERSION__,
     packages=find_packages(
         exclude=[
             "*.tests", "*.tests.*", "tests.*", "tests",

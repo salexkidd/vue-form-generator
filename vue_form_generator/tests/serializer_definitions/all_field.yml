@@ -1,0 +1,134 @@
+main:
+  name: AllFieldSerializerByYAML
+  fields:
+  - name: boolean_field
+    field: BooleanField
+    field_kwargs:
+      initial: true
+
+  - name: nullboolean_field
+    field: NullBooleanField
+    field_kwargs:
+      initial: true
+
+  - name: char_field
+    field: CharField
+    field_kwargs:
+      initial: hogehoge
+      max_length: 100
+
+  - name: email_field
+    field: EmailField
+    field_kwargs:
+      initial: test@example
+
+  - name: regex_field
+    field: RegexField
+    field_args:
+    - ^[a-zA-Z]*$
+    field_kwargs:
+      initial: azAZ123
+
+  - name: slug_field
+    field: SlugField
+    field_kwargs:
+      initial: 123123!!!
+
+  - name: url_field
+    field: URLField
+    field_kwargs:
+      initial: http://www.google.com
+
+  - name: uuid_field
+    field: UUIDField
+    field_kwargs:
+      initial: 550e8400-e29b-41d4-a716-446655440000
+
+  - name: integer_field
+    field: IntegerField
+    field_kwargs:
+      initial: 123
+      min_value: 0
+      max_value: 1000
+
+  - name: decimal_field
+    field: DecimalField
+    field_kwargs:
+      max_digits: 5
+      decimal_places: 2
+      initial: 0.1
+
+  - name: datetime_field
+    field: DateTimeField
+    field_kwargs:
+      initial: 2011/02/03 04:05
+
+  - name: date_field
+    field: DateField
+    field_kwargs:
+      initial: 2016/07/08
+
+  - name: time_field
+    field: TimeField
+    field_kwargs:
+      initial: 2011/06/07 08:09
+
+  - name: duration_field
+    field: DurationField
+
+  - name: choice_field
+    field: ChoiceField
+    field_kwargs:
+      initial: 1
+    field_args:
+    - - - 1
+        - choice_one
+      - - 2
+        - choice_two
+      - - 3
+        - choice_three
+
+  - name: non_nullable_choice_field
+    field: definable_serializer.extra_fields.ChoiceWithBlankField
+    field_kwargs:
+      initial: 1
+    field_args:
+    - - - ''
+        - '---- Please choice ---'
+      - - 1
+        - choice_one
+      - - 2
+        - choice_two
+      - - 3
+        - choice_three
+
+  - name: multiple_choice_field
+    field: MultipleChoiceField
+    field_kwargs:
+      initial:
+      - 1
+      - 2
+
+    field_args:
+    - - - 1
+        - choice_one
+      - - 2
+        - choice_two
+      - - 3
+        - choice_three
+
+  - name: radio_field
+    field: definable_serializer.extra_fields.RadioField
+    field_kwargs:
+      initial: two
+
+    field_args:
+    - - - one
+        - One(1)
+      - - two
+        - Two(2)
+      - - three
+        - Three(3)
+
+  - name: readonly_field
+    field: ReadOnlyField

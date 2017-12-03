@@ -1,0 +1,12 @@
+main:
+  name: ExternalField
+  fields:
+  - name: radio_field
+    field: definable_serializer.extra_fields.RadioField
+    field_args:
+    - - - male
+        - Male
+      - - other
+        - Other
+      - - female
+        - Female
