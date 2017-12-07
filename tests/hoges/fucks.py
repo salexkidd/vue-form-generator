@@ -100,25 +100,11 @@ VUE_FORM_GENERATOR_SETTINGS = VUE_FORM_GENERATOR_SETTINGS = {
         "definable_serializer.extra_fields.MultipleCheckboxField": {"type": "checklist"},
         "definable_serializer.extra_fields.ChoiceRequiredField": {
             "type": "vueMultiSelect",
-            "selectOptions": {
-                "trackBy": "name",
-                "key": "name",
-                "label": "name",
-                "hideSelected": True,
-            }
+            "selectOptions": {"key": "name", "label": "name",}
         },
         "definable_serializer.extra_fields.ChoiceWithBlankField": {
             "type": "vueMultiSelect",
-            "selectOptions": {
-                "trackBy": "name",
-                "key": "name",
-                "label": "name",
-                "hideSelected": True,
-            }
+            "selectOptions": {"key": "name", "label": "name",}
         }
     }
 }
-
-
-USE_TZ = True
-TIME_ZONE = "Asia/Tokyo"

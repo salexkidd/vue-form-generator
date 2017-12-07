@@ -90,4 +90,5 @@ typings/*
 
 cover/*
 
-
+static/bundles/*
+*/webpack-stats.json

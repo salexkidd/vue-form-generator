@@ -21,6 +21,6 @@ class VueFormGeneratorSchemaRenderer(BaseRenderer):
         serializer_class = view.get_serializer_class()
         encoder = VueFormGeneratorEncoder(serializer_class())
         return json.dumps(
-            encoder.get_vue_form_generators_schema(),
+            encoder.get_vue_form_generator_schema(),
             ensure_ascii=False
         )

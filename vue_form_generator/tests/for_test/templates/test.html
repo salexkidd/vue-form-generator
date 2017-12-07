@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block "content" %}
+<div class="container">
+  <div class="container" id="app">
+    <div class="panel panel-default">
+      <div class="panel-heading">Form</div>
+      <div class="panel-body">
+        <vue-form-generator :schema="schema" :model="model" :options="formOptions"></vue-form-generator>
+        <button class="btn btn-danger" v-on:click="clearAllModelData">clearAllModel</button>
+        <button class="btn btn-danger" v-on:click="setNullAllModel">setNullAllModel</button>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">Schema</div>
+      <div class="panel-body">
+        <pre v-if="schema" v-html="prettyJSON(schema)"></pre>
+      </div>
+
+      <hr>
+      <div class="panel-heading">Model</div>
+      <div class="panel-body">
+        <pre v-if="model" v-html="prettyJSON(model)"></pre>
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>
+
+<script>
+  var definitionName = "{{ view.kwargs.definition }}";
+  var vm;
+</script>
+
+{% endblock %}

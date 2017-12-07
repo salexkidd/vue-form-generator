@@ -5,9 +5,6 @@ from ..codec import VueFormGeneratorEncoder
 from definable_serializer.serializers import build_serializer_by_yaml_file
 
 import os
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 
 
 DEFINITION_FILES_DIR = os.path.join(
@@ -16,20 +13,6 @@ DEFINITION_FILES_DIR = os.path.join(
 
 
 class TestBase(TestCase):
-    def setUp(self):
-        options = Options()
-
-        # Chromeのパス（Stableチャネルで--headlessが使えるようになったら不要なはず）
-        # options.binary_location = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
-
-        # ヘッドレスモードを有効にする（次の行をコメントアウトすると画面が表示される）。
-        options.add_argument('--headless')
-
-        # ChromeのWebDriverオブジェクトを作成する。
-        self.driver = webdriver.Chrome(chrome_options=options)
-
-    def tearDown(self):
-        self.driver.quit()
 
     def _load_definition_file(self, filename):
         return build_serializer_by_yaml_file(
@@ -42,16 +25,10 @@ class TestCodec(TestBase):
         serializer_class = self._load_definition_file("all_field.yml")
         serializer = serializer_class()
         encoder = VueFormGeneratorEncoder(serializer)
-        schema = encoder.get_vue_form_generators_schema()
+        schema = encoder.get_vue_form_generator_schema()
 
-    def test_external_field(self):
-        serializer_class = self._load_definition_file("external_field.yml")
-        serializer = serializer_class()
-        encoder = VueFormGeneratorEncoder(serializer)
-        schema = encoder.get_vue_form_generators_schema()
-
-
-class WebTest(TestBase):
-    def test_chrome(self):
-        self.driver.get('https://www.google.co.jp/')
-        assert 'Google' in self.driver.title
+    # def test_external_field(self):
+    #     serializer_class = self._load_definition_file("external_field.yml")
+    #     serializer = serializer_class()
+    #     encoder = VueFormGeneratorEncoder(serializer)
+    #     schema = encoder.get_vue_form_generator_schema()

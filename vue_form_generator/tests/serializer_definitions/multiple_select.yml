@@ -1,0 +1,17 @@
+main:
+  name: AllFieldSerializerByYAML
+  fields:
+  - name: multiple_choice_field
+    field: MultipleChoiceField
+    field_kwargs:
+      initial:
+      - 1
+      - 2
+
+    field_args:
+    - - - 1
+        - choice_one
+      - - 2
+        - choice_two
+      - - 3
+        - choice_three

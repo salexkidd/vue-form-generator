@@ -7,9 +7,9 @@ from rest_framework.fields import empty
 import pydoc
 from copy import deepcopy
 
-TIME_ONLY_FORMAT = "HH:mm"
+TIME_ONLY_FORMAT = "HH:mm:ss"
 DATE_ONLY_FORMAT = "YYYY/MM/DD"
-DATETIME_FORMAT = "YYYY/MM/DD LT"
+DATETIME_FORMAT = "YYYY/MM/DD HH:mm:ss"
 UUID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 
 FIELD_AND_VUE_FORM_GENERATOR_MAP = {
@@ -66,12 +66,16 @@ FIELD_AND_VUE_FORM_GENERATOR_MAP = {
     serializers.MultipleChoiceField: {
         "type": "vueMultiSelect",
         "selectOptions": {
-            "multiple": True, "key": "name", "label": "name",
+            "multiple": True,
+            "trackBy": "name",
+            "key": "name",
+            "label": "name",
+            "hideSelected": True,
         }
     },
 
     # Hidden Field
-    serializers.HiddenField: {"type": "input", "visible": False},
+    serializers.HiddenField: {"type": "input", "inputType": "hidden",},
 }
 
 external_field_and_vue_form_generator_map = getattr(
@@ -128,6 +132,7 @@ class VueFormGeneratorEncoder:
             data["pattern"] = pattern
 
     def _set_select_values(self, field, data):
+
         if data["type"] in ("radios", "checklist",):
             data["styleClasses"] = ["vfg-radio-class"]
             data["values"] = [
@@ -143,6 +148,10 @@ class VueFormGeneratorEncoder:
                 else:
                     data["values"].append({"name": label, "id": value})
 
+            # set ID to select input box
+            data["selectOptions"]["id"] = field.field_name
+
+
     def _set_default(self, field, data):
         if not field.initial:
             return
@@ -157,8 +166,23 @@ class VueFormGeneratorEncoder:
                     data["default"].append(_default_value(value))
             else:
                 data["default"] = _default_value(field.initial)
+
+        elif data["type"] in ("dateTimePicker",):
+            data["default"] = field.initial.isoformat()
+
         else:
             data["default"] = field.initial
+
+    def set_field_label_and_hint(self, field, data):
+        label = ""
+        hint = ""
+
+        if not isinstance(field, serializers.HiddenField):
+            label = field.label
+            hint = field.help_text
+
+        data["label"] = label
+        data["hint"] = hint
 
     def _build_schema(self, field):
         data = deepcopy(
@@ -166,6 +190,7 @@ class VueFormGeneratorEncoder:
                 field.__class__, DEFAULT_FIELD_AND_VUE_FORM_GENERATOR_MAP)
         )
 
+        self.set_field_label_and_hint(field, data)
         self._prepare_validatorand_insert_required(field, data)
         self._set_input_max_length(field, data)
         self._set_number_min_and_max(field, data)
@@ -179,13 +204,13 @@ class VueFormGeneratorEncoder:
         result = {"fields": []}
         for field_name, field in self._serializer.fields.items():
             field_data = {
-                "label": field.label,
-                "hint": field.help_text,
+                "id": field_name,
                 "model": field_name,
                 "required": field.required,
                 "readonly": field.read_only,
             }
             field_data.update(self._build_schema(field))
             result["fields"].append(field_data)
+
 
         return result
