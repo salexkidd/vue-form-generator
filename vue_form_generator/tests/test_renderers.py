@@ -6,6 +6,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from rest_framework import serializers
 
 from definable_serializer.serializers import build_serializer_by_yaml_file
+from definable_serializer import extra_fields
 
 import os
 import time
@@ -36,8 +37,7 @@ class ChromeWebDriverMixin(TestCase):
     def setUpChromeWebDriver(self):
         options = Options()
         options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
         options.add_argument('--window-size=1900,1200')
         self.chrome_driver = webdriver.Chrome(chrome_options=options)
 
@@ -107,14 +107,6 @@ class ChromeWebDriverMixin(TestCase):
         stitched_image.save(file)
         print("Finishing chrome full page screenshot workaround...")
         return True
-
-    # def _clear_input_field(self, field):
-    #     self.driver.implicitly_wait(0.1)
-    #     field.clear()
-    #
-    # def _input_value(self, field, value):
-    #     self.driver.implicitly_wait(0.1)
-    #     field.send_keys(value)
 
 
 class RendererTest(LoadSerializerDefinitionMixin,
@@ -202,57 +194,27 @@ class RendererTest(LoadSerializerDefinitionMixin,
 
         for field_name, field in serializer.fields.items():
             if field.__class__ == target_class:
-                element = self.chrome_driver.find_element_by_id(field_name)
-                import ipdb; ipdb.set_trace()
-                self.assertEqual(
-                    str(element.get_attribute("_value")),
-                    field.choices[field.initial]
-                )
+                for element in self.chrome_driver.find_elements_by_xpath("//span[contains(@class, 'multiselect__tag')]"):
+                    label_element = element.find_element_by_tag_name("span")
+                    self.assertIn(
+                        label_element.get_attribute("innerHTML"),
+                        [field.choices.get(i) for i in field.initial]
+                    )
 
-    # def test_initial_value_check(self):
-    #     serialier_class = self._load_definition_file("all_field.yml")
-    #     serializer = serialier_class()
-    #
-    #     self.chrome_driver.get('{}/for_test_app/test-page/all_field/'.format(self.live_server_url))
-    #
-    #     self.chrome_driver.implicitly_wait(0.5)
-    #
-    #     # input default
-    #     for field_name, field in serializer.fields.items():
-    #         field_id = field_name.replace("_", "-")
-    #
-    #         initial = field.initial
-    #
-    #         if not initial:
-    #             continue
-    #
-    #         initial = str(initial)
-    #
-    #         if isinstance(field, serializers.ChoiceField):
-    #             # element = self.chrome_driver.find_element_by_id(field_id)
-    #             ...
-    #
-    #         elif any(
-    #             [isinstance(field, kls) for kls in (serializers.BooleanField, serializers.NullBooleanField,)]
-    #         ):
-    #             # element = self.chrome_driver.find_element_by_id(field_id)
-    #             ...
-    #
-    #         elif any(
-    #             [isinstance(field, kls) for kls in (serializers.DateTimeField, serializers.DateField, serializers.TimeField)]
-    #         ):
-    #
-    #             if hasattr(initial, "tzinfo"):
-    #                 initial = initial.replace(tzinfo=None)
-    #
-    #             element = self.chrome_driver.find_element_by_id(field_id)
-    #             initial = initial.replace("-", "/")
-    #             print("FieldId: {}".format(field_id))
-    #             print(str(element.get_attribute("value")))
-    #
-    #             import ipdb; ipdb.set_trace()
-    #             self.assertEqual(str(element.get_attribute("value")), initial)
-    #
-    #         else:
-    #             element = self.chrome_driver.find_element_by_id(field_id)
-    #             self.assertEqual(str(element.get_attribute("value")), initial)
+    def test_radio_initial_value_check(self):
+        target_class = extra_fields.RadioField
+
+        serialier_class = self._load_definition_file("all_field.yml")
+        serializer = serialier_class()
+
+        self.chrome_driver.get('{}/for_test_app/test-page/all_field/'.format(self.live_server_url))
+        self.chrome_driver.implicitly_wait(0.5)
+
+        for field_name, field in serializer.fields.items():
+            if field.__class__ == target_class:
+                radio_list = self.chrome_driver.find_element_by_class_name("radio-list")
+                selected_radio_input = radio_list.find_element_by_class_name("is-checked").find_element_by_tag_name("input")
+                self.assertEqual(
+                    field.initial,
+                    selected_radio_input.get_attribute("value")
+                )
