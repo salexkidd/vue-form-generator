@@ -105,9 +105,14 @@ if (definitionName) {
 
                         if (selectOption.multiple == true) {
                             postData[modelName] = new Array()
-                            for (let data of modelData){ postData[modelName].push(data.id) }
+                            if (modelData != null) {
+                                for (let data of modelData){ postData[modelName].push(data.id) }
+                            }
                         } else {
-                            postData[modelName] = modelData["id"] || []
+                            if (modelData != null) {
+                                postData[modelName] = modelData["id"]
+                            }
+
                         }
                     }
                 }
