@@ -16,6 +16,7 @@ DEFINITION_FILES_DIR = os.path.join(
 
 API_SERIALIZER_DEFINITION_MAP = {
     "all_field": "all_field.yml",
+    "all_field_and_non_default": "all_field_and_non_default.yml",
     "multiple_select": "multiple_select.yml",
 }
 
@@ -43,4 +44,19 @@ class TestAPI(GenericAPIView):
         return Response("OK")
 
     def post(self, request, *args, **kwargs):
-        return Response("OK")
+        serializer_class = self.get_serializer_class()
+
+        serializer = serializer_class(data=self.request.data)
+
+        from pprint import pprint
+        pprint(self.request.data)
+
+        serializer.is_valid()
+        if serializer.errors:
+            pprint(serializer.errors)
+
+        if serializer.is_valid(raise_exception=True):
+            print(serializer)
+            ...
+
+        return Response(data=serializer.data)

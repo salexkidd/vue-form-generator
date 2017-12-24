@@ -37,7 +37,7 @@ class ChromeWebDriverMixin(TestCase):
     def setUpChromeWebDriver(self):
         options = Options()
         options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument('--window-size=1900,1200')
         self.chrome_driver = webdriver.Chrome(chrome_options=options)
 
@@ -109,9 +109,9 @@ class ChromeWebDriverMixin(TestCase):
         return True
 
 
-class RendererTest(LoadSerializerDefinitionMixin,
-                   ChromeWebDriverMixin,
-                   StaticLiveServerTestCase):
+class RendererDefaultValueTest(LoadSerializerDefinitionMixin,
+                               ChromeWebDriverMixin,
+                               StaticLiveServerTestCase):
 
     def setUp(self):
         self.setUpChromeWebDriver()

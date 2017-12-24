@@ -8,9 +8,10 @@ import pydoc
 from copy import deepcopy
 
 TIME_ONLY_FORMAT = "HH:mm:ss"
-DATE_ONLY_FORMAT = "YYYY/MM/DD"
-DATETIME_FORMAT = "YYYY/MM/DD HH:mm:ss"
+DATE_ONLY_FORMAT = "YYYY-MM-DD"
+DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss"
 UUID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+
 
 FIELD_AND_VUE_FORM_GENERATOR_MAP = {
 
@@ -102,8 +103,9 @@ class VueFormGeneratorEncoder:
         if not "validator" in data:
             data["validator"] = list()
 
-        if field.required:
-            data["validator"].append("required")
+        data["validator"] = list()
+        # if field.required:
+        #     data["validator"].append("required")
 
     def _set_input_max_length(self, field, data):
         if data["type"] == "input":
@@ -183,6 +185,7 @@ class VueFormGeneratorEncoder:
 
         data["label"] = label
         data["hint"] = hint
+
 
     def _build_schema(self, field):
         data = deepcopy(

@@ -1,53 +1,38 @@
 main:
   name: AllFieldSerializerByYAML
   fields:
+
   - name: boolean_field
     field: BooleanField
-    field_kwargs:
-      initial: true
 
   - name: nullboolean_field
     field: NullBooleanField
-    field_kwargs:
-      initial: true
 
   - name: char_field
     field: CharField
     field_kwargs:
-      initial: Hello
       max_length: 100
 
   - name: email_field
     field: EmailField
-    field_kwargs:
-      initial: test@example.com
 
   - name: regex_field
     field: RegexField
     field_args:
     - ^[a-zA-Z]*$
-    field_kwargs:
-      initial: azAZ
 
   - name: slug_field
     field: SlugField
-    field_kwargs:
-      initial: slug_field
 
   - name: url_field
     field: URLField
-    field_kwargs:
-      initial: http://www.google.com
 
   - name: uuid_field
     field: UUIDField
-    field_kwargs:
-      initial: 550e8400-e29b-41d4-a716-446655440000
 
   - name: integer_field
     field: IntegerField
     field_kwargs:
-      initial: 123
       min_value: 0
       max_value: 1000
 
@@ -56,33 +41,23 @@ main:
     field_kwargs:
       max_digits: 5
       decimal_places: 2
-      initial: 0.1
 
   - name: datetime_field
     field: DateTimeField
-    field_kwargs:
-      initial: 2011-02-03 04:05:06
 
   - name: date_field
     field: DateField
-    field_kwargs:
-      initial: 2011-01-01
 
   - name: time_field
     field: TimeField
-    field_kwargs:
-      initial: 08:09
 
   - name: duration_field
     field: DurationField
     field_kwargs:
-      initial: 1
       required: true
 
   - name: choice_field
     field: ChoiceField
-    field_kwargs:
-      initial: 1
     field_args:
     - - - 1
         - choice_one
@@ -93,8 +68,6 @@ main:
 
   - name: non_nullable_choice_field
     field: definable_serializer.extra_fields.ChoiceWithBlankField
-    field_kwargs:
-      initial: 1
     field_args:
     - - - ''
         - '---- Please choice ---'
@@ -107,11 +80,6 @@ main:
 
   - name: multiple_choice_field
     field: MultipleChoiceField
-    field_kwargs:
-      initial:
-      - 1
-      - 2
-
     field_args:
     - - - 1
         - choice_one
@@ -122,9 +90,6 @@ main:
 
   - name: radio_field
     field: definable_serializer.extra_fields.RadioField
-    field_kwargs:
-      initial: two
-
     field_args:
     - - - one
         - One(1)
@@ -135,11 +100,8 @@ main:
 
   - name: readonly_field
     field: ReadOnlyField
-    field_kwargs:
-      initial: I am readonly field.
 
   - name: hidden_field
     field: HiddenField
     field_kwargs:
-      initial: I am hidden field.
-      default: I am hidden field.
+      default: "it is default"
